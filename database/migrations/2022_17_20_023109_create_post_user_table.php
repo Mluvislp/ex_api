@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePostTable extends Migration
+class CreatePostsUserPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreatePostTable extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->string('title')->nullable();
-            $table->json('body');
-            $table->foreignId('user_id');
+        Schema::create('post_user', function (Blueprint $table) {
+          
+            $table->foreignId('user_id')->index();
             $table->foreign('user_id')->on('users')->references('id')->cascadeOnDelete();
-            $table->foreignId('post_id');
+            $table->foreignId('post_id')->index();
             $table->foreign('post_id')->on('posts')->references('id')->cascadeOnDelete();
-            $table->timestamps();
+          $table->primary(['post_id','user_id']);
         });
     }
 
@@ -32,6 +30,6 @@ class CreatePostTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('post_user');
     }
 }
